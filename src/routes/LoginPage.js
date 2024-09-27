@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signInWithGooglePopup, createUserDocFromAuth } from '../utils/firebase';
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
-const LoginPage = (props) => {
+const LoginPage = ({ setIsSignedIn }) => {
   const navigate = useNavigate();
   const auth = getAuth();
 
@@ -27,7 +27,9 @@ const LoginPage = (props) => {
     const { username, password } = contact;
     try {
       await signInWithEmailAndPassword(auth, username, password);
+      setIsSignedIn(true);
       navigate('/');
+
     } catch (error) {
       console.error('Error signing in with email and password:', error.message);
       alert('Login failed: ' + error.message); 
@@ -38,6 +40,7 @@ const LoginPage = (props) => {
     try {
       const { user } = await signInWithGooglePopup();
       await createUserDocFromAuth(user);
+      setIsSignedIn(true);
       navigate('/');
     } catch (error) {
       console.error('Error signing in with Google:', error.message);
